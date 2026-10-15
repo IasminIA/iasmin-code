@@ -38,5 +38,13 @@ Chain:
 ## Key risk
 Live `agent/` modules the deploy tree imports. The deploy tree must keep working at every commit — extraction is incremental, never breaking in-tree imports mid-migration (use shims that re-export from the package).
 
+## Config-seam decision (2026-10-15, discovered during execution)
+The leaf modules anchor data dirs via `Path(__file__).parent.parent`, assuming the deploy-tree layout:
+- `context.py:17` `BASE = Path(__file__).parent.parent` → identity/, users/; plus hardcoded `CODE_VAULT_DIR = /home/iasmin/repos/GarnetSeal/code-vault` and `VAULT_ROOTS = /home/iasmin/repos/IasminIA/...`
+- `skills.py:11` `BASE = Path(__file__).parent.parent` → skills/
+- `alerts.py:25` `load_dotenv(Path(__file__).parent.parent / ".env")` + absolute SIGNAL_CLI/SIGNAL_CONFIG
+
+Copying verbatim mislocates these. Fix: introduce `iasmin_core.config` exposing a `paths` object (BASE, IDENTITY_DIR, USERS_DIR, SKILLS_DIR, code-vault dir, vault roots, .env location), populated from explicit env vars / ctor args with the current hardcoded values as deploy-tree defaults. Leaf modules import from config instead of computing `__file__`-relative anchors. Keeps deploy tree working unchanged while making the package location-independent.
+
 ## Decision (resolved)
 Package home: new private repo `IasminIA/iasmin-core`. Consumed via git+SSH dependency (`git+ssh://git@github.com/IasminIA/iasmin-core.git`). Deploy tree uses editable/local install. No PyPI, no public exposure. The core stays private — it's the proprietary brain. `iasmin-code` (CLI) stays public and imports core as a dependency.
