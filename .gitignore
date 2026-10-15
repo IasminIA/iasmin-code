@@ -1,0 +1,44 @@
+# Secrets - never commit env files or their backups.
+.env
+.env.*
+
+# Local Claude Code config
+.claude/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Coverage artifacts
+.coverage
+coverage.xml
+htmlcov/
+
+# Logs / scratch
+*.log
+tmp/
+state/
+
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+.vscode/
+
+# Runtime binaries
+*.so
+*.dll
+*.exe
+*.bin
+*.o
+*.a
+
+# Backup
+*~
+*.bak
+*.bak.*

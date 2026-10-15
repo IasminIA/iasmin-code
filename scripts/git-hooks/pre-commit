@@ -1,0 +1,21 @@
+#!/bin/bash
+# Enforces the git flow deterministically. Portable (option A) — no
+# hardcoded Pi deploy-tree path; works on any clone.
+# Installed via scripts/install-git-hooks.sh (core.hooksPath .githooks).
+
+toplevel="$(git rev-parse --show-toplevel)"
+branch="$(git symbolic-ref --quiet --short HEAD || echo DETACHED)"
+
+# Chain the repo-local secret/scratch guard (#106 pattern) — core.hooksPath
+# points here, so it no longer fires on its own.
+guard="$toplevel/.githooks/pre-commit"
+if [ -x "$guard" ]; then
+    exec "$guard" "$@"
+fi
+
+if [ "$branch" = "main" ]; then
+    echo "BLOCKED: direct commits to main are forbidden." >&2
+    echo "Create a branch: git checkout -b feat/<slug>  then commit, push, and open a PR." >&2
+    exit 1
+fi
+exit 0

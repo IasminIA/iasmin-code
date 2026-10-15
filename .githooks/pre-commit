@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# Mechanical backstop against committing secrets / one-off scratch files.
+# Belt-and-suspenders on top of .gitignore and the iasmin-config-sync skill
+# guard: this runs on EVERY `git commit` regardless of who drives it (the
+# config-sync agent or a human), so prevention no longer depends on an LLM
+# faithfully following a skill. See IasminIA/iasmin#106.
+#
+# Enable once per clone:  git config core.hooksPath .githooks
+#
+set -uo pipefail
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+[ -z "$staged" ] && exit 0
+
+bad=""
+
+# 1) Filename denylist - the patterns that have actually leaked onto main.
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    if printf '%s\n' "$f" | grep -Eiq '(^|/)\.env($|\.)|\.bak($|\.)|(^|/)secret|_extracted\.txt$|(^|/)extract_.*\.py$'; then
+        bad+="  - $f (name matches secret/scratch denylist)"$'\n'
+    fi
+done <<< "$staged"
+
+# 2) Content heuristic - catch an env dump committed under an innocent name.
+while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    [ -f "$f" ] || continue
+    n=$(grep -Ec '^[A-Z][A-Z0-9_]*(KEY|TOKEN|SECRET|PASSWORD|PASSWD)[A-Z0-9_]*=.+' "$f" 2>/dev/null || true)
+    if [ "${n:-0}" -ge 3 ]; then
+        bad+="  - $f (looks like a secret/env dump: $n secret-like assignments)"$'\n'
+    fi
+done <<< "$staged"
+
+if [ -n "$bad" ]; then
+    {
+        echo "pre-commit BLOCKED: refusing to commit secret/scratch files (see #106):"
+        printf '%s' "$bad"
+        echo "If this is genuinely intended and reviewed, re-run with: git commit --no-verify"
+    } >&2
+    exit 1
+fi
+exit 0

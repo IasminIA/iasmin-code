@@ -1,0 +1,13 @@
+# Repo config for the CI secrets scan (extends the default gitleaks rules).
+# The IasminIA/iasmin monorepo carries a revoked-Tavily-key allowlist from a
+# 2026-09-05 rotation; that is NOT carried over here — this repo has a clean
+# history and no leaked keys to excuse. If this scan ever fails: rotate the
+# secret FIRST, then rewrite it out of history — never baseline it away.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "tavily-api-key"
+description = "Tavily API key (tvly- prefix)"
+regex = '''tvly-[a-zA-Z0-9-]{30,}'''

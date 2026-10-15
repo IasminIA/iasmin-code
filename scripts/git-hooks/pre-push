@@ -1,0 +1,38 @@
+#!/bin/bash
+# Blocks any push that updates refs/heads/main. PRs are the only path to main.
+# Also blocks pushes of commits already on origin/main (stale/merged branches).
+
+blocked=0
+
+# Ensure a fresh view of origin/main.
+git fetch -q origin main 2>/dev/null || true
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+    # Block pushes to main (but allow initial creation of main on empty remote)
+    if [ "$remote_ref" = "refs/heads/main" ] && [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
+        echo "BLOCKED: pushing to main is forbidden ($local_ref -> $remote_ref)." >&2
+        blocked=1
+        continue
+    fi
+
+    # Skip the stale check for branch deletions
+    if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+        continue
+    fi
+
+    # Skip stale check if origin/main doesn't exist
+    if ! git rev-parse --verify origin/main >/dev/null 2>&1; then
+        continue
+    fi
+
+    # Block pushes of commits already on origin/main (merged branches)
+    if git merge-base --is-ancestor "$local_sha" origin/main 2>/dev/null; then
+        echo "BLOCKED: $local_sha is already on origin/main (branch already merged — delete it with 'git branch -d')." >&2
+        blocked=1
+    fi
+done
+
+if [ "$blocked" = 1 ]; then
+    echo "Push a feature branch and open a PR instead." >&2
+    exit 1
+fi
