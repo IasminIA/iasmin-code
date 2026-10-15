@@ -21,6 +21,7 @@ file distills what applies to this repo.
 - PR title follows Conventional Commits. Keep the description current.
 - CI must be green before merge. A PR is not done until CI passes.
 - When approved, Iasmin merges and deploys.
+- **Merge strategy: rebase-merge. Never squash. Configured at the repo level.**
 
 ## Self-review before pushing
 1. Run the full local test suite.

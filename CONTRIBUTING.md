@@ -13,6 +13,9 @@
 ## Never push directly to main
 Hotfixes too. Branch `hotfix/<thing>` → PR. The audit trail and CI pass are worth it.
 
+## Merge strategy
+- Rebase-merge only. Never squash.
+
 ## Hooks
 Install once per clone: `bash scripts/install-git-hooks.sh`. This sets
 `core.hooksPath .githooks` (portable, repo-relative). Never bypass with
