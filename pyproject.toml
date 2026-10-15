@@ -1,0 +1,15 @@
+[project]
+name = "iasmin-code"
+version = "0.1.0"
+description = "iasmin terminal CLI — Claude-Code-faithful local runner with remote brain on the Pi"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0,<10.0.0",
+    "pytest-cov>=5.0.0,<7.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
