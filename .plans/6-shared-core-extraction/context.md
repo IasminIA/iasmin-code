@@ -38,5 +38,5 @@ Chain:
 ## Key risk
 Live `agent/` modules the deploy tree imports. The deploy tree must keep working at every commit — extraction is incremental, never breaking in-tree imports mid-migration (use shims that re-export from the package).
 
-## Open decision (blocker)
-WHERE does the shared library live + how is it versioned/consumed. Issue #6 does not specify. Options: (A) new repo `IasminIA/iasmin-core`, (B) subdirectory in iasmin-code, (C) private index / git dependency. Pending Xavier.
+## Decision (resolved)
+Package home: new private repo `IasminIA/iasmin-core`. Consumed via git+SSH dependency (`git+ssh://git@github.com/IasminIA/iasmin-core.git`). Deploy tree uses editable/local install. No PyPI, no public exposure. The core stays private — it's the proprietary brain. `iasmin-code` (CLI) stays public and imports core as a dependency.

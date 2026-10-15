@@ -2,8 +2,8 @@
 
 Branch (execution PR): `feat/6-shared-core-extraction`
 
-## Prerequisite decision (pend Xavier, recorded in context.md)
-Package home + versioning mechanism. Default recommendation: new repo `IasminIA/iasmin-core`, PyPI-style `pyproject.toml`, consumed via git dependency or editable install.
+## Prerequisite decision
+Resolved: new private repo `IasminIA/iasmin-core`, consumed via git+SSH dependency. Deploy tree: editable/local install.
 
 ## Execution steps
 0. Confirm package home + versioning (answer the open decision).
