@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "iasmin terminal CLI — Claude-Code-faithful local runner with remote brain on the Pi"
 requires-python = ">=3.11"
 dependencies = [
-    "iasmin-core @ git+ssh://git@github.com/IasminIA/iasmin-core.git@v0.1.0",
+    "iasmin-core @ git+https://x-access-token:${IASMIN_CORE_GH_PAT}@github.com/IasminIA/iasmin-core.git@v0.1.0",
 ]
 
 [project.optional-dependencies]
