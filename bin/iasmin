@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+"""iasmin entry script.
+
+Dispatches to one-shot mode when a prompt is supplied, otherwise drops into
+the interactive REPL. Does not require the SSH tunnel yet (issue #10); the
+transport plugs in by replacing ``handle_prompt`` in ``iasmin_cli.onetoshot``.
+"""
+
+from iasmin_cli.onetoshot import main
+
+if __name__ == "__main__":
+    main()

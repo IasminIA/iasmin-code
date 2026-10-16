@@ -7,6 +7,9 @@ dependencies = [
     "iasmin-core @ git+https://x-access-token:${IASMIN_CORE_GH_PAT}@github.com/IasminIA/iasmin-core.git@v0.1.0",
 ]
 
+[project.scripts]
+iasmin = "iasmin_cli.onetoshot:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0,<10.0.0",
