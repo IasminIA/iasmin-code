@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "iasmin terminal CLI — Claude-Code-faithful local runner with remote brain on the Pi"
 requires-python = ">=3.11"
 dependencies = [
-    "iasmin-core @ git+https://x-access-token:${IASMIN_CORE_GH_PAT}@github.com/IasminIA/iasmin-core.git@v0.1.0",
+    "iasmin-core==0.1.0",
 ]
 
 [project.scripts]
@@ -19,6 +19,14 @@ dev = [
     "pytest>=8.0.0,<10.0.0",
     "pytest-cov>=5.0.0,<7.0.0",
 ]
+
+[[tool.uv.index]]
+name = "pypiserver"
+url = "https://pypi.iasmin.eu/simple/"
+explicit = true
+
+[tool.uv.sources]
+iasmin-core = { index = "pypiserver" }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
