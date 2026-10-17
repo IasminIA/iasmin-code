@@ -1,5 +1,11 @@
 # Plan — switch CLI dependency to iasmin-core wheel from pypiserver
 
+**Status: EXECUTING (2026-10-17).** Steps 1–4 done: wheel verified on index (iasmin_core-0.1.0), PYPISERVER_READ_TOKEN set, index+sources declared, dep switched. Step 5 (uv.lock regen) + CI green pending. Step 7 (IASMIN_CORE_GH_PAT removal) flagged to Xavier.
+
+---
+
+# Plan — switch CLI dependency to iasmin-core wheel from pypiserver
+
 Backing: #20. Branch: feat/20-wheel-pypiserver.
 
 1. Verify iasmin-core wheel is on the pypiserver index (from #14 manual release) first.
